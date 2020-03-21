@@ -2,6 +2,8 @@ import numpy as np
 import random
 import math
 import matplotlib.pyplot as plt
+from numpy import fft
+import time
 
 n = 12
 w = 2700
@@ -44,6 +46,8 @@ f2 = np.zeros(N // 2)
 
 f = np.zeros(N)
 
+
+time_start = time.time()
 for i in range(N // 2):
     for t in range(N // 2):
         f2[i] += H[2 * t] * w_k[i][t]
@@ -55,8 +59,19 @@ for t in range(N):
         f[t] += f2[t] + w_k_pN[t] * f1[t]
     else:
         f[t] += f2[t - (N // 2)] - w_k_pN[t] * f1[t - (N // 2)]
+time_end = time.time() - time_start
 
 plt.figure(figsize=(20, 15))
 plt.plot(f)
 plt.grid(True)
 plt.show()
+
+
+time_2 = time.time()
+f = fft.fft(H)
+time_end_2 = time.time() - time_2
+plt.figure(figsize=(20, 15))
+plt.plot(f)
+plt.grid(True)
+plt.show()
+print(f"Lib time {time_end_2}, my algorithm time {time_end}")
